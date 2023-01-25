@@ -1,0 +1,10 @@
+username: walden2
+
+password: saraza
+
+shell: /bin/bash
+
+packages:
+  - git
+  - docker
+  

@@ -1,5 +1,3 @@
 username: walden2
-packages:
-  - git
-  - docker
   
+shell: /usr/bin/bash

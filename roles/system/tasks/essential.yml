@@ -1,0 +1,12 @@
+- name: Update packages
+  apt:
+    name: "*"
+    state: latest
+
+- name: Install essential packages
+  apt:
+    pkg:
+    - nano
+    - net-tools
+    state: latest
+    update_cache: yes
