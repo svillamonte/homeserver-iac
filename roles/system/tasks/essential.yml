@@ -8,5 +8,6 @@
     pkg:
     - nano
     - net-tools
+    - curl
     state: latest
     update_cache: yes
