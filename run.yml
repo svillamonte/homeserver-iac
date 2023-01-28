@@ -1,8 +1,11 @@
 ---
 - hosts: all
   become: yes
-
   roles:
     - role: system
     - role: containers
     
+- hosts: main
+  become: yes
+  roles:
+    - role: infrastructure
