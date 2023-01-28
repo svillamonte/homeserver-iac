@@ -3,3 +3,5 @@ username: walden2
 shell: /usr/bin/bash
 
 ubuntu_version: jammy
+
+portainer_user: admin
