@@ -1,0 +1,15 @@
+version: '3'
+services:
+  reverse-proxy:
+    image: traefik:v2.9
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    environment:
+      - "CLOUDFLARE_DNS_API_TOKEN={{ cloudflare_api_token }}"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/walden2/traefik:/etc/traefik
