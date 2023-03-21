@@ -1,2 +1,2 @@
-*/secret.yml
+group_vars/*/secret.yml
 inventory.yml
