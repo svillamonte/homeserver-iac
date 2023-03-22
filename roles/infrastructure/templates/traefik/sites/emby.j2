@@ -1,0 +1,15 @@
+http:
+  routers:
+    emby:
+      rule: "Host(`emby.{{ domain }}`)"
+      service: emby
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: httpsResolver
+
+  services:
+    emby:
+      loadBalancer:
+        servers:
+          - url: "{{ sites_urls.emby }}"

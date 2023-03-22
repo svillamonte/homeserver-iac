@@ -5,3 +5,8 @@ shell: /usr/bin/bash
 ubuntu_version: jammy
 
 portainer_user: admin
+
+sites_urls:
+  emby: '{{ emby_url }}'
+  lychee: '{{ lychee_url }}'
+  sonarr: '{{ sonarr_url }}'

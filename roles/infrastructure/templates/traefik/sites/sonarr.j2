@@ -1,0 +1,15 @@
+http:
+  routers:
+    sonarr:
+      rule: "Host(`sonarr.{{ domain }}`)"
+      service: sonarr
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: httpsResolver
+
+  services:
+    sonarr:
+      loadBalancer:
+        servers:
+          - url: "{{ sites_urls.sonarr }}"

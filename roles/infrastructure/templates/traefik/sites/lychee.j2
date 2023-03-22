@@ -1,0 +1,15 @@
+http:
+  routers:
+    lychee:
+      rule: "Host(`lychee.{{ domain }}`)"
+      service: lychee
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: httpsResolver
+
+  services:
+    lychee:
+      loadBalancer:
+        servers:
+          - url: "{{ sites_urls.lychee }}"
