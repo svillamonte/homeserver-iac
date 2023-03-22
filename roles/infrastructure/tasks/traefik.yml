@@ -1,13 +1,3 @@
-- name: Create traefik directory at home
-  file:
-    path: "/home/{{ username }}/traefik"
-    state: directory
-
-- name: Create traefik sites directory at home
-  file:
-    path: "/home/{{ username }}/traefik/sites"
-    state: directory
-
 - name: Build traefik stack YAML
   set_fact:
     traefik_yaml_contents: "{{ lookup('template', '{{ role_path}}/templates/traefik.j2') }}"
@@ -29,6 +19,14 @@
       Name: traefik
     status_code: 200, 409
   register: portainer_local_env
+
+- name: Create traefik required directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "/home/{{ username }}/traefik"
+    - "/home/{{ username }}/traefik/sites"
 
 - name: Configure traefik sites
   template:
