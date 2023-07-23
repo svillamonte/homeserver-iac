@@ -1,0 +1,81 @@
+- name: Run Portainer Agent container
+  community.docker.docker_container:
+    name: portainer_agent
+    image: portainer/agent:latest
+    restart_policy: always
+    ports:
+      - "9001:9001"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker
+
+- name: Get portainer host
+  set_fact:
+    portainer_host: "{{ hostvars[main_host_name].ansible_host }}"
+  vars:
+    main_host_name: "{{ groups['main'] | first }}"
+
+- name: Get auth token
+  uri:
+    url: "https://{{ portainer_host }}:9443/api/auth"
+    method: POST
+    return_content: true
+    validate_certs: false
+    body_format: json
+    body: '{ "username":"{{ portainer_user }}", "password":"{{ portainer_password }}"}'
+  register: portainer_auth
+
+# Use host IP address instead of domain name so ping from Portainer works
+- name: Add environment
+  uri:
+    url: "https://{{ portainer_host }}:9443/api/endpoints"
+    method: POST
+    return_content: true
+    validate_certs: false
+    headers:
+      Authorization: Bearer {{ (portainer_auth.content|from_json).jwt }}
+    body_format: form-multipart
+    body:
+      Name: "{{ inventory_hostname }}"
+      EndpointCreationType: "2"
+      URL: "tcp://{{ ansible_default_ipv4.address }}:9001"
+      TLS: "true"
+      TLSSkipVerify: "true"
+      TLSSkipClientVerify: "true"
+    status_code: 200, 409
+
+- name: Get environments
+  uri:
+    url: "https://{{ portainer_host }}:9443/api/endpoints"
+    method: GET
+    return_content: true
+    validate_certs: false
+    headers:
+      Authorization: Bearer {{ (portainer_auth.content|from_json).jwt }}
+  register: portainer_environments
+
+- name: Get current endpoint
+  set_fact:
+    local_endpoint_id: "{{ portainer_environments.content | from_json | json_query(query) | first }}"
+  vars:
+    query: "[?Name=='{{ inventory_hostname }}'].Id"
+
+- name: Update environment with domain name
+  uri:
+    url: "https://{{ portainer_host }}:9443/api/endpoints/{{ local_endpoint_id }}"
+    method: PUT
+    return_content: true
+    validate_certs: false
+    headers:
+      Authorization: Bearer {{ (portainer_auth.content|from_json).jwt }}
+      Content-Type: "application/json"
+    body_format: json
+    body: >
+      {
+        "Name": "{{ inventory_hostname }}",
+        "URL": "tcp://{{ inventory_hostname }}.internal:9001",
+        "TLS": true,
+        "TLSSkipVerify": true,
+        "TLSSkipClientVerify": true,
+      }
+    status_code: 200, 409

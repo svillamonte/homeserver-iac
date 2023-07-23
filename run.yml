@@ -9,3 +9,8 @@
   become: yes
   roles:
     - role: infrastructure
+
+- hosts: nodes
+  become: yes
+  roles:
+    - role: nodes
