@@ -1,7 +1,7 @@
 version: '3'
 services:
   reverse-proxy:
-    image: traefik:v2.9
+    image: traefik:latest
     container_name: traefik
     restart: unless-stopped
     ports:
@@ -10,6 +10,22 @@ services:
       - "8080:8080"
     environment:
       - "CLOUDFLARE_DNS_API_TOKEN={{ cloudflare_api_token }}"
+    dns:
+      - 172.24.0.1
+      - 8.8.8.8
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /home/walden2/traefik:/etc/traefik
+      - /home/walden2/traefik/certificates:/etc/traefik/certificates:rw
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.api.rule=Host(`traefik.internal.{{ domain }}`)
+      - traefik.http.routers.api.service=api@internal
+      - traefik.http.routers.api.entrypoints=websecure
+      - traefik.http.routers.api.middlewares=localwhitelist@file
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true

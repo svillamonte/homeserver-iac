@@ -1,0 +1,17 @@
+http:
+  routers:
+    portainer:
+      rule: "Host(`portainer.internal.{{ domain }}`)"
+      service: portainer
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: httpsResolver
+      middlewares:
+        - localwhitelist
+
+  services:
+    portainer:
+      loadBalancer:
+        servers:
+          - url: "https://{{ ansible_host }}:9443"

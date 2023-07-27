@@ -1,3 +1,11 @@
+- name: Create traefik network
+  community.docker.docker_network:
+    name: traefik
+    state: present
+    driver: bridge
+    ipam_config:
+      - subnet: 172.24.0.0/16
+
 - name: Build traefik stack YAML
   set_fact:
     traefik_yaml_contents: "{{ lookup('template', '{{ role_path}}/templates/traefik.j2') }}"
@@ -27,6 +35,7 @@
   loop:
     - "/home/{{ username }}/traefik"
     - "/home/{{ username }}/traefik/sites"
+    - "/home/{{ username }}/traefik/certificates"
 
 - name: Configure traefik sites
   template:
