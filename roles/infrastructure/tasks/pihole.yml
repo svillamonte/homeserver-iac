@@ -1,0 +1,46 @@
+- name: Update host DNS to free up port 53
+  lineinfile:
+    path: /etc/systemd/resolved.conf
+    regexp: '^#?(DNSStubListener=no)'
+    line: 'DNSStubListener=no'
+  # notify handler to restart service?
+
+- name: Restart systemd-resolved to free up port 53
+  systemd:
+    name: systemd-resolved
+    state: restarted
+
+- name: Build Pihole stack YAML
+  set_fact:
+    pihole_yaml_contents: "{{ lookup('template', '{{ role_path }}/templates/pihole.j2') }}"
+
+- name: Install Pihole
+  uri:
+    url: "https://{{ ansible_host }}:9443/api/stacks?type=2&method=file&endpointId={{ local_endpoint_id }}"
+    method: POST
+    return_content: true
+    validate_certs: false
+    headers:
+      Authorization: Bearer {{ (portainer_auth.content|from_json).jwt }}
+    body_format: form-multipart
+    body:
+      file: 
+        content: "{{ pihole_yaml_contents }}"
+        filename: "pihole.yml"
+        content_type: "text/plain"
+      Name: pihole
+    status_code: 200, 409
+
+- name: Create Pihole required directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "/home/{{ username }}/pihole"
+    - "/home/{{ username }}/pihole/etc-dnsmasq.d"
+    - "/home/{{ username }}/pihole/etc-pihole"
+
+- name: Configure Pihole wildcard DNS
+  template:
+    src: "{{ role_path }}/templates/pihole/etc-dnsmasq.d/03-pihole-wildcard-dns.j2"
+    dest: "/home/{{ username }}/pihole/etc-dnsmasq.d/03-pihole-wildcard-dns.conf"
