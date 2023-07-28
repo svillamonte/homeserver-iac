@@ -14,3 +14,4 @@
   become: yes
   roles:
     - role: nodes
+    - role: galaxy.swap

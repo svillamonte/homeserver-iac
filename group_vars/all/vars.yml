@@ -12,3 +12,5 @@ sites_urls:
   sonarr: '{{ sonarr_url }}'
   portainer: 'placeholder'
   localwhitelist: 'placeholder'
+
+swap_file_size_mb: '4096'
