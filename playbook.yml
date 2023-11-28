@@ -1,0 +1,23 @@
+- hosts: all
+  become: yes
+  roles:
+    - name: Install system dependencies
+      role: system
+    - name: Add containers management
+      role: containers
+
+- hosts: main
+  become: yes
+  roles:
+    - name: Increase swapfile size
+      role: galaxy.swap
+    - name: Install Portainer
+      role: portainer
+    - name: Install Traefik
+      role: traefik
+    - name: Install Authelia
+      role: authelia
+    - name: Install Pihole
+      role: pihole
+    - name: Install Photoprism
+      role: photoprism

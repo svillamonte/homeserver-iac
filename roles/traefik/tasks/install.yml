@@ -1,0 +1,22 @@
+- name: Create Traefik network
+  community.docker.docker_network:
+    name: traefik
+    state: present
+    driver: bridge
+    ipam_config:
+      - subnet: 172.24.0.0/16
+
+- name: Get Traefik docker-compose template
+  set_fact:
+    docker_compose_path: "{{ role_path }}/templates/docker-compose.j2"
+
+- name: Install Traefik
+  include_role:
+    name: portainer_stack
+  vars:
+    template_path: "{{ docker_compose_path }}"
+    portainer_host: "{{ ansible_host }}"
+    user: "{{ portainer_user }}"
+    password: "{{ portainer_password }}"
+    local_endpoint: "{{ inventory_hostname }}"
+    stack_name: traefik

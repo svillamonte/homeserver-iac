@@ -1,0 +1,6 @@
+template_path: templates/docker-compose.j2
+portainer_host: host
+user: admin
+password: password
+local_endpoint: endpoint
+stack_name: stack

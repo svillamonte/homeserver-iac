@@ -1,0 +1,12 @@
+- name: Create Traefik required directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "/home/{{ username }}/traefik"
+    - "/home/{{ username }}/traefik/config"
+
+- name: Register Portainer with Traefik
+  template:
+    src: "{{ role_path }}/templates/portainer.j2"
+    dest: "/home/{{ username }}/traefik/config/portainer.yml"

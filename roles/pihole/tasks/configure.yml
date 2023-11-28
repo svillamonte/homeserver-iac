@@ -1,0 +1,14 @@
+# - name: Configure Pihole wildcard DNS
+#   template:
+#     src: "{{ role_path }}/templates/etc-dnsmasq.d/03-pihole-wildcard-dns.j2"
+#     dest: "/home/{{ username }}/pihole/etc-dnsmasq.d/03-pihole-wildcard-dns.conf"
+
+- name: Configure DNS
+  template:
+    src: "{{ role_path }}/templates/etc-pihole/custom.j2"
+    dest: "/home/{{ username }}/pihole/etc-pihole/custom.list"
+
+- name: Configure Pihole CNAME
+  template:
+    src: "{{ role_path }}/templates/etc-dnsmasq.d/05-pihole-custom-cname.j2"
+    dest: "/home/{{ username }}/pihole/etc-dnsmasq.d/05-pihole-custom-cname.conf"

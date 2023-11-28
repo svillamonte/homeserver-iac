@@ -1,0 +1,3 @@
+- include_tasks: install.yml
+- include_tasks: init_environment.yml
+- include_tasks: reverse_proxy.yml

@@ -1,0 +1,32 @@
+version: '3'
+services:
+  authelia:
+    image: authelia/authelia:latest
+    container_name: authelia
+    volumes:
+      - /home/walden2/authelia:/config
+      - /home/walden2/authelia/secrets:/config/secrets:ro
+    restart: unless-stopped
+    networks:
+      - traefik
+    dns:
+      - 127.0.0.1
+      - 8.8.8.8
+    environment:
+      - TZ=Pacific/Auckland
+      - AUTHELIA_JWT_SECRET_FILE=/config/secrets/JWT_SECRET
+      - AUTHELIA_SESSION_SECRET_FILE=/config/secrets/SESSION_SECRET
+      - AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE=/config/secrets/SMTP_PASSWORD
+      - AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE=/config/secrets/STORAGE_ENCRYPTION_KEY
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.authelia.rule=Host(`auth.{{ domain }}`)      
+      - traefik.http.routers.authelia.entrypoints=https
+      - traefik.http.routers.authelia.tls=true
+      - traefik.http.routers.authelia.tls.certresolver=letsencrypt
+      - traefik.http.routers.authelia.service=authelia-svc
+      - traefik.http.services.authelia-svc.loadbalancer.server.port=9091
+
+networks:
+  traefik:
+    external: true

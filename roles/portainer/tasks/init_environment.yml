@@ -1,0 +1,23 @@
+- name: Get auth token
+  uri:
+    url: "https://{{ ansible_host }}:9443/api/auth"
+    method: POST
+    return_content: true
+    validate_certs: false
+    body_format: json
+    body: '{ "username":"{{ portainer_user }}", "password":"{{ portainer_password }}"}'
+  register: portainer_auth
+
+- name: Add local environment
+  uri:
+    url: "https://{{ ansible_host }}:9443/api/endpoints"
+    method: POST
+    return_content: true
+    validate_certs: false
+    headers:
+      Authorization: Bearer {{ (portainer_auth.content|from_json).jwt }}
+    body_format: form-multipart
+    body:
+      Name: "{{ inventory_hostname }}"
+      EndpointCreationType: "1"
+    status_code: 200, 409

@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    environment:
+      TZ: 'Pacific/Auckland'
+      WEBPASSWORD: '{{ password }}'
+    dns:
+      - 127.0.0.1
+      - 8.8.8.8
+    volumes:
+      - '/home/walden2/pihole/etc-pihole:/etc/pihole'
+      - '/home/walden2/pihole/etc-dnsmasq.d:/etc/dnsmasq.d'
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.pihole.entrypoints=https
+      - traefik.http.routers.pihole.rule=Host(`pihole.{{ domain }}`)
+      - traefik.http.routers.pihole.middlewares=authelia@file,piholeadmin
+      - traefik.http.routers.pihole.tls.certresolver=letsencrypt
+      - traefik.http.routers.pihole.service=pihole
+      - traefik.http.services.pihole.loadbalancer.server.port=80
+      - traefik.http.middlewares.piholeadmin.redirectregex.regex=^https://pihole.{{ domain }}/$
+      - traefik.http.middlewares.piholeadmin.redirectregex.replacement=https://pihole.{{ domain }}/admin/
+    restart: unless-stopped
+    networks:
+      - traefik
+      
+networks:
+  traefik:
+    external: true
+    

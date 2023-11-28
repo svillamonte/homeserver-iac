@@ -1,3 +1,0 @@
-- include_tasks: portainer.yml
-- include_tasks: traefik.yml
-- include_tasks: pihole.yml

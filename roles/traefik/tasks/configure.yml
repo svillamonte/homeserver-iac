@@ -1,0 +1,23 @@
+- name: Create Traefik required directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "/home/{{ username }}/traefik"
+    - "/home/{{ username }}/traefik/config"
+    - "/home/{{ username }}/traefik/certificates"
+
+- name: Configure Traefik
+  template:
+    src: "{{ role_path }}/templates/traefik.j2"
+    dest: "/home/{{ username }}/traefik/traefik.yml"
+
+- name: Assign TLS
+  template:
+    src: "{{ role_path }}/templates/config/tls.j2"
+    dest: "/home/{{ username }}/traefik/config/tls.yml"
+
+- name: Create Authelia middleware
+  template:
+    src: "{{ role_path }}/templates/config/authelia.j2"
+    dest: "/home/{{ username }}/traefik/config/authelia.yml"

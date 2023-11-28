@@ -1,0 +1,17 @@
+http:
+  routers:
+    portainer:
+      rule: "Host(`portainer.{{ domain }}`)"
+      service: portainer
+      entryPoints:
+        - https
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - authelia
+
+  services:
+    portainer:
+      loadBalancer:
+        servers:
+          - url: "https://{{ ansible_host }}:9443"

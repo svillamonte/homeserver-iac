@@ -10,5 +10,12 @@
     - net-tools
     - curl
     - qemu-guest-agent
+    - nfs-common
     state: latest
     update_cache: yes
+
+- name: Add 8.8.8.8 nameserver
+  lineinfile:
+    path: /etc/resolv.conf
+    line: "nameserver 8.8.8.8"
+    
