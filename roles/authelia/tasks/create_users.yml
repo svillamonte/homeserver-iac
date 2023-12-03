@@ -1,13 +1,27 @@
+- name: Check if users config file exists
+  stat:
+    path: /home/{{ username }}/authelia/users.yml
+  register: users_config_status
+
 - name: Generate password hash
   shell: >
-    docker run authelia/authelia:latest authelia crypto hash generate argon2 --password '{{ authelia_password }}'
+    docker run --name authelia_hasher authelia/authelia:latest authelia crypto hash generate argon2 --password '{{ authelia_password }}'
   register: hash_output
+  when: users_config_status.stat.exists == false
+
+- name: Remove authelia_hasher container
+  community.docker.docker_container:
+    name: authelia_hasher
+    state: absent
+  when: users_config_status.stat.exists == false
 
 - name: Set password hash variable
   set_fact:
     authelia_password_hash: "{{ hash_output.stdout | replace('Digest: ', '') }}"
+  when: users_config_status.stat.exists == false
 
 - name: Copy users config file
   template:
     src: "{{ role_path }}/templates/users.j2"
     dest: "/home/{{ username }}/authelia/users.yml"
+  when: users_config_status.stat.exists == false
