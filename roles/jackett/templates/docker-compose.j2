@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  jackett:
+    image: linuxserver/jackett:latest
+    container_name: jackett
+    restart: unless-stopped
+    ports:
+      - "9117:9117"
+    environment:
+      - "PUID=1000"
+      - "PGID=1000"
+      - "TZ=Pacific/Auckland"
+      - "AUTO_UPDATE=true"
+    dns:
+      - 127.0.0.1
+      - 8.8.8.8
+    volumes:
+      - /home/walden2/jackett/config:/config
+      - /home/walden2/jackett/downloads:/downloads
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.jackett.entrypoints=https
+      - traefik.http.routers.jackett.rule=Host(`jackett.{{ domain }}`)
+      - traefik.http.routers.jackett.middlewares=authelia@file
+      - traefik.http.routers.jackett.tls.certresolver=letsencrypt
+      - traefik.http.routers.jackett.service=jackett
+      - traefik.http.services.jackett.loadbalancer.server.port=9117
+    networks:
+      - traefik
+      
+networks:
+  traefik:
+    external: true
+ 
