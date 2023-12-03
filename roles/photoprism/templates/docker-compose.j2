@@ -18,7 +18,7 @@ services:
       - "2342:2342"
     environment:
       PHOTOPRISM_ADMIN_: "admin"                     # admin login username
-      PHOTOPRISM_ADMIN_PASSWORD: {{ password }}      # initial admin password (8-72 characters)
+      PHOTOPRISM_ADMIN_PASSWORD: "{{ password }}"    # initial admin password (8-72 characters)
       PHOTOPRISM_AUTH_MODE: "password"               # authentication mode (public, password)
       PHOTOPRISM_SITE_URL: "http://localhost:2342/"  # server URL in the format "http(s)://domain.name(:port)/(path)"
       PHOTOPRISM_DISABLE_TLS: "false"                # disables HTTPS/TLS even if the site URL starts with https:// and a certificate is available
@@ -45,7 +45,7 @@ services:
       PHOTOPRISM_DATABASE_SERVER: "mariadb:3306"     # MariaDB or MySQL database server (hostname:port)
       PHOTOPRISM_DATABASE_NAME: "photoprism"         # MariaDB or MySQL database schema name
       PHOTOPRISM_DATABASE_USER: "photoprism"         # MariaDB or MySQL database user name
-      PHOTOPRISM_DATABASE_PASSWORD: {{ password }}   # MariaDB or MySQL database user password
+      PHOTOPRISM_DATABASE_PASSWORD: "{{ password }}" # MariaDB or MySQL database user password
       PHOTOPRISM_SITE_CAPTION: "AI-Powered Photos App"
       PHOTOPRISM_SITE_DESCRIPTION: ""                # meta site description
       PHOTOPRISM_SITE_AUTHOR: ""                     # meta site author
@@ -110,6 +110,8 @@ services:
       MARIADB_USER: "photoprism"
       MARIADB_PASSWORD: "{{ password }}"
       MARIADB_ROOT_PASSWORD: "{{ password }}"
+    networks:
+      - traefik
 
   ## Watchtower upgrades services automatically (optional)
   ## see https://docs.photoprism.app/getting-started/updates/#watchtower
@@ -124,6 +126,8 @@ services:
       WATCHTOWER_POLL_INTERVAL: 86400
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - traefik
 
 networks:
   traefik:
