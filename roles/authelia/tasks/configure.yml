@@ -1,0 +1,4 @@
+- name: Copy config file
+  template:
+    src: "{{ role_path }}/templates/configuration.j2"
+    dest: "/home/{{ username }}/authelia/configuration.yml"
