@@ -6,6 +6,9 @@ log:
 accessLog:
   filePath: /etc/traefik/access.log
 
+serversTransport:
+  insecureSkipVerify: true
+
 entryPoints:
   http:
     address: ":80"
