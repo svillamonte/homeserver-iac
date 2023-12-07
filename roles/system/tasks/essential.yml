@@ -9,10 +9,16 @@
     - nano
     - net-tools
     - curl
-    - qemu-guest-agent
     - nfs-common
     state: latest
     update_cache: yes
+
+- name: Install QEMU Guest Agent
+  apt:
+    pkg:
+    - qemu-guest-agent
+    state: latest
+  notify: Restart QEMU service
 
 - name: Add 8.8.8.8 nameserver
   lineinfile:

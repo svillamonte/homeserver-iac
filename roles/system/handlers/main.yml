@@ -2,3 +2,8 @@
   service:
     name: sshd
     state: restarted
+
+- name: Restart QEMU service
+  service:
+    name: qemu-guest-agent
+    state: started
