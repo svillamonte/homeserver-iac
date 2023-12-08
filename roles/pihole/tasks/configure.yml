@@ -12,3 +12,9 @@
   template:
     src: "{{ role_path }}/templates/etc-dnsmasq.d/05-pihole-custom-cname.j2"
     dest: "/home/{{ username }}/pihole/etc-dnsmasq.d/05-pihole-custom-cname.conf"
+
+- name: Set upstream DNS server
+  lineinfile:
+    dest: "/home/{{ username }}/pihole/etc-pihole/setupVars.conf"
+    regexp: '^PIHOLE_DNS_1='
+    line: "PIHOLE_DNS_1=192.168.1.1"
