@@ -9,17 +9,11 @@
 - hosts: main
   become: yes
   roles:
-    - name: Increase swapfile size
-      role: galaxy.swap
-    - name: Install Portainer
-      role: portainer
-    - name: Install Traefik
-      role: traefik
-    - name: Install Authelia
-      role: authelia
-    - name: Install Pihole
-      role: pihole
-    - name: Install Photoprism
-      role: photoprism
-    - name: Install Jackett
-      role: jackett
+    - role: galaxy.swap # Increase swapfile size
+    - role: portainer
+    - role: traefik
+    - role: authelia
+    - role: pihole
+    - role: photoprism
+    - role: jackett
+    - role: jellyfin
