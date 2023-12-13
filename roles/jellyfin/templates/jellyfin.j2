@@ -1,0 +1,36 @@
+http:
+  routers:
+    jellyfin:
+      rule: "Host(`jellyfin.{{ domain }}`)"
+      service: jellyfin
+      entrypoints:
+        - https
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - authelia
+        - jellyfin-middleware
+
+  services:
+    jellyfin:
+      loadBalancer:
+        servers:
+          - url: "http://{{ ansible_host }}:8096"
+        passHostHeader: true
+
+  middlewares:
+    jellyfin-middleware:
+      headers:
+        customResponseHeaders:
+          X-Robots-Tag: "noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex"
+          X-XSS-PROTECTION: 0
+        SSLRedirect: true
+        SSLHost: "jellyfin.{{ domain }}"
+        SSLForceHost: true
+        STSSeconds: 315360000
+        STSIncludeSubdomains: true
+        STSPreload: true
+        forceSTSHeader: true
+        frameDeny: true
+        contentTypeNoSniff: true
+        customFrameOptionsValue: "allow-from https://{{ domain }}"

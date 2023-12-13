@@ -1,0 +1,2 @@
+- include_tasks: init.yml
+- include_tasks: install.yml

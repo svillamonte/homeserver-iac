@@ -1,0 +1,26 @@
+- name: Create mount paths
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /mnt/series
+    - /mnt/movies
+    - /mnt/music
+
+- name: Mount network share for series
+  lineinfile:
+    path: /etc/fstab
+    line: "{{ nas_host }}:/mnt/Data/Series		/mnt/series	nfs rw,user,auto, 0 0"
+    state: present
+
+- name: Mount network share for movies
+  lineinfile:
+    path: /etc/fstab
+    line: "{{ nas_host }}:/mnt/Data/Movies		/mnt/movies	nfs rw,user,auto, 0 0"
+    state: present
+
+- name: Mount network share for music
+  lineinfile:
+    path: /etc/fstab
+    line: "{{ nas_host }}:/mnt/Data/Musik		/mnt/music	nfs rw,user,auto, 0 0"
+    state: present
