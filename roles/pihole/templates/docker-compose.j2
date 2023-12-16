@@ -11,8 +11,7 @@ services:
       TZ: 'Pacific/Auckland'
       WEBPASSWORD: '{{ password }}'
     dns:
-      - 127.0.0.1
-      - 8.8.8.8
+      - 192.168.1.1
     volumes:
       - '/home/walden2/pihole/etc-pihole:/etc/pihole'
       - '/home/walden2/pihole/etc-dnsmasq.d:/etc/dnsmasq.d'

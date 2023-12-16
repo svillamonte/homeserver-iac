@@ -11,8 +11,7 @@ services:
     environment:
       - "CLOUDFLARE_DNS_API_TOKEN={{ cloudflare_api_token }}"
     dns:
-      - 172.24.0.1
-      - 8.8.8.8
+      - 192.168.1.1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /home/walden2/traefik:/etc/traefik

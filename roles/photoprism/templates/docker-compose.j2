@@ -73,8 +73,7 @@ services:
     #  - "/dev/video11:/dev/video11"                 # Video4Linux Video Encode Device (h264_v4l2m2m)
     working_dir: "/photoprism" # do not change or remove
     dns:
-      - 127.0.0.1
-      - 8.8.8.8
+      - 192.168.1.1
     volumes:
       - "/mnt/photos:/photoprism/originals"               # Original media files (DO NOT REMOVE)
       - "/home/walden2/photoprism/import:/photoprism/import"                  # *Optional* base folder from which files can be imported to originals
