@@ -17,3 +17,5 @@
     - role: photoprism
     - role: jackett
     - role: jellyfin
+    - role: lidarr
+    

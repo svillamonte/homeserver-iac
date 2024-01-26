@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+  lidarr:
+    image: youegraillot/lidarr-on-steroids
+    container_name: lidarr
+    restart: unless-stopped
+    ports:
+      - "8686:8686" # Lidarr web UI
+      - "6595:6595" # Deemix web UI
+    environment:
+      - "PUID=1000"
+      - "PGID=1000"
+    dns:
+      - 192.168.1.1
+    volumes:
+      - /home/walden2/lidarr/config:/config
+      - /home/walden2/lidarr/config_deemix:/config_deemix
+      - /home/walden2/lidarr/downloads:/downloads
+      - /mnt/music:/music
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.lidarr.entrypoints=https
+      - traefik.http.routers.lidarr.rule=Host(`lidarr.{{ domain }}`)
+      - traefik.http.routers.lidarr.middlewares=authelia@file
+      - traefik.http.routers.lidarr.tls.certresolver=letsencrypt
+      - traefik.http.routers.lidarr.service=lidarr
+      - traefik.http.services.lidarr.loadbalancer.server.port=8686
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
