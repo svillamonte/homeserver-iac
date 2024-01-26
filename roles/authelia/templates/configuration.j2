@@ -42,13 +42,22 @@ authentication_backend:
 
 access_control:
   default_policy: deny
+  networks:
+  - name: internal
+    networks:
+    - '10.0.0.0/8'
+    - '172.16.0.0/12'
+    - '192.168.0.0/18'      
   rules:
     - domain:
       - "{{ domain }}"
       - "*.{{ domain }}"
       policy: bypass
       networks:
-      - 192.168.1.0/24
+      - "internal"
+    - domain:
+      - "jellyfin.{{ domain }}"
+      policy: bypass
     - domain:
       - "{{ domain }}"
       - "*.{{ domain }}"
