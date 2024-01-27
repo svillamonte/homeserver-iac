@@ -18,4 +18,5 @@
     - role: jackett
     - role: jellyfin
     - role: lidarr
+    - role: home_assistant
     

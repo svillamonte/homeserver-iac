@@ -1,0 +1,17 @@
+http:
+  routers:
+    home_assistant:
+      rule: "Host(`hass.{{ domain }}`)"
+      service: home_assistant
+      entrypoints:
+        - https
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - authelia
+
+  services:
+    home_assistant:
+      loadBalancer:
+        servers:
+          - url: "http://{{ homeassistant_host }}:8123"
