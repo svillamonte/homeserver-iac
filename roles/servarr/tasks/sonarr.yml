@@ -1,0 +1,17 @@
+- name: Create Sonarr required directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "/home/{{ username }}/sonarr"
+    - "/home/{{ username }}/sonarr/config"
+    
+- name: Copy Sonarr docker-compose
+  template:
+    src: "{{ role_path }}/templates/sonarr-docker-compose.j2"
+    dest: "/home/{{ username }}/sonarr/docker-compose.yml"
+
+- name: Install Sonarr
+  community.docker.docker_compose:
+    project_src: "/home/{{ username }}/sonarr"
+    state: present

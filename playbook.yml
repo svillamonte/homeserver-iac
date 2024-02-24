@@ -19,4 +19,5 @@
     - role: jellyfin
     - role: lidarr
     - role: home_assistant
-    
+    - role: servarr
+   

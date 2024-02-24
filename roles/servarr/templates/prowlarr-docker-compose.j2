@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  prowlarr:
+    container_name: prowlarr
+    image: ghcr.io/hotio/prowlarr
+    ports:
+      - "9696:9696"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=Pacific/Auckland
+    dns:
+      - 192.168.1.1
+    volumes:
+      - /home/walden2/prowlarr/config:/config

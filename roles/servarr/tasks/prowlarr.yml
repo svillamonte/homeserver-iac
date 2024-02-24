@@ -1,0 +1,17 @@
+- name: Create Prowlarr required directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "/home/{{ username }}/prowlarr"
+    - "/home/{{ username }}/prowlarr/config"
+    
+- name: Copy Prowlarr docker-compose
+  template:
+    src: "{{ role_path }}/templates/prowlarr-docker-compose.j2"
+    dest: "/home/{{ username }}/prowlarr/docker-compose.yml"
+
+- name: Install Prowlarr
+  community.docker.docker_compose:
+    project_src: "/home/{{ username }}/prowlarr"
+    state: present

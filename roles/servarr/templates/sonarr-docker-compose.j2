@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+  sonarr:
+    container_name: sonarr
+    image: ghcr.io/hotio/sonarr
+    ports:
+      - "8989:8989"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=Pacific/Auckland
+    dns:
+      - 192.168.1.1
+    volumes:
+      - /home/walden2/sonarr/config:/config
+      - /mnt:/data
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.sonarr.entrypoints=https
+      - traefik.http.routers.sonarr.rule=Host(`sonarr.{{ domain }}`)
+      - traefik.http.routers.sonarr.middlewares=authelia@file
+      - traefik.http.routers.sonarr.tls.certresolver=letsencrypt
+      - traefik.http.routers.sonarr.service=sonarr
+      - traefik.http.services.sonarr.loadbalancer.server.port=8989
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true

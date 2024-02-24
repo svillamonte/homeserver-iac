@@ -1,0 +1,17 @@
+- name: Create Radarr required directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "/home/{{ username }}/radarr"
+    - "/home/{{ username }}/radarr/config"
+    
+- name: Copy Radarr docker-compose
+  template:
+    src: "{{ role_path }}/templates/radarr-docker-compose.j2"
+    dest: "/home/{{ username }}/radarr/docker-compose.yml"
+
+- name: Install Radarr
+  community.docker.docker_compose:
+    project_src: "/home/{{ username }}/radarr"
+    state: present

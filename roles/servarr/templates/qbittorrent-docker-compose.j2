@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Pacific/Auckland
+      - WEBUI_PORT=8090
+      - TORRENTING_PORT=6881
+    dns:
+      - 192.168.1.1
+    volumes:
+      - /home/walden2/qbittorrent/config:/config
+      - /mnt/downloads:/data/downloads
+    ports:
+      - 8090:8090
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped

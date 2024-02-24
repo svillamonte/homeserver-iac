@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+  radarr:
+    container_name: radarr
+    image: ghcr.io/hotio/radarr
+    ports:
+      - "7878:7878"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=Pacific/Auckland
+    dns:
+      - 192.168.1.1
+    volumes:
+      - /home/walden2/radarr/config:/config
+      - /mnt:/data
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.radarr.entrypoints=https
+      - traefik.http.routers.radarr.rule=Host(`radarr.{{ domain }}`)
+      - traefik.http.routers.radarr.middlewares=authelia@file
+      - traefik.http.routers.radarr.tls.certresolver=letsencrypt
+      - traefik.http.routers.radarr.service=radarr
+      - traefik.http.services.radarr.loadbalancer.server.port=7878
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true

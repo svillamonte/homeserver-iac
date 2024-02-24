@@ -1,0 +1,17 @@
+- name: Create qBittorrent required directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "/home/{{ username }}/qbittorrent"
+    - "/home/{{ username }}/qbittorrent/config"
+    
+- name: Copy qBittorrent docker-compose
+  template:
+    src: "{{ role_path }}/templates/qbittorrent-docker-compose.j2"
+    dest: "/home/{{ username }}/qbittorrent/docker-compose.yml"
+
+- name: Install qBittorrent
+  community.docker.docker_compose:
+    project_src: "/home/{{ username }}/qbittorrent"
+    state: present
