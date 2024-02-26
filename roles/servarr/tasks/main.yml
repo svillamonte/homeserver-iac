@@ -1,3 +1,4 @@
+- include_tasks: init.yml
 - include_tasks: qbittorrent.yml
 - include_tasks: prowlarr.yml
 - include_tasks: sonarr.yml
